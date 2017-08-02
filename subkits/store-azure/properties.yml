@@ -1,0 +1,14 @@
+---
+instance_groups:
+- name: shield
+  jobs:
+  - name: shield-agent
+    properties:
+      stores:
+        default:
+          plugin: azure
+          config:
+            storage_account: (( vault meta.vault "/azure:account" ))
+            storage_account_key: (( vault meta.vault "/azure:account_key" ))
+            storage_container: (( grab params.azure_storage_container ))
+            # prefix: (( grab params.azure_container_prefix ))

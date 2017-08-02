@@ -1,0 +1,13 @@
+---
+instance_groups:
+- name: shield
+  jobs:
+  - name: shield-agent
+    properties:
+      stores:
+        default:
+          plugin: google
+          config:
+            json_key: (( vault meta.vault "/google:json_key" ))
+            bucket: (( grab params.google_bucket ))
+            prefix: (( grab params.google_bucket_prefix ))

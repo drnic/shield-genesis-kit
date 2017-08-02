@@ -14,6 +14,19 @@ subkits:
       label: UAA OAuth Integration
     - subkit: ~
       label: HTTP Basic Auth
+- prompt: What default storage backend do you wish to use with SHIELD?
+  type: auth backend
+  choices:
+    - subkit: store-aws-s3
+      label: Amazon S3
+    - subkit: store-s3-api
+      label: S3-compatible API
+    - subkit: store-google
+      label: Google Cloud Platform
+    - subkit: store-azure
+      label: Microsoft Azure Storage
+    - subkit: ~
+      label: I'll configure storage later with the "shield" CLI
 
 params:
   base:
@@ -72,6 +85,66 @@ params:
         groups whose users will be given access to SHIELD here.
       param: authz_allowed_groups
 
+  store-aws-s3:
+    - ask: What is your AWS Access Key?
+      description: The AWS Access Key is used to authenticate SHIELD to Amazon Web Services
+      vault: aws:access_key
+    - ask: What is your AWS Secret Key?
+      description: The AWS Secret Key is used to authenticate SHIELD to Amazon Web Services
+      vault: aws:secret_key
+    - ask: Amazon S3 bucket name?
+      description: Amazon S3 bucket name used by default to store all backup artifacts.
+      param: aws_bucket
+    - description: Prefix path for all backup artifacts stored in the Amazon S3 bucket
+      param: aws_bucket_prefix
+
+  store-s3-api:
+    - ask: What is S3 API hostname?
+      description: The hostname/IP of the S3-compatible API for storing all backup artifacts
+      param: s3_host
+    - ask: What is S3 API port?
+      description: The port of the S3-compatible API for storing all backup artifacts
+      param: s3_port
+      validate: /^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/
+    - ask: Skip SSL verification on S3-compatible API?
+      description: For example, if the S3 API has self-signed certificate then "yes"
+      param: s3_skip_ssl_validation
+      type: boolean
+    - ask: What is your S3 API Access Key?
+      description: The S3 API Access Key is used to authenticate SHIELD to Amazon Web Services
+      vault: s3-api:access_key
+    - ask: What is your S3 API Secret Key?
+      description: The S3 API Secret Key is used to authenticate SHIELD to Amazon Web Services
+      vault: s3-api:secret_key
+    - ask: S3-compatible bucket name?
+      description: S3-compatible bucket name used by default to store all backup artifacts.
+      param: s3_bucket
+    - description: Prefix path for all backup artifacts stored in the S3-compatible bucket
+      param: s3_bucket_prefix
+
+  store-google:
+    - ask: What are your GCP credentials?
+      description: The json key to authenticate to GCP
+      vault: google:json_key
+    - ask: What is your GCP project ID?
+      description: The project ID of the GCP project your deployments will be deployed to
+      param: google_project
+    - ask: Google Cloud Storage bucket name?
+      description: Google Cloud Storage bucket name used by default to store all backup artifacts.
+      param: google_bucket
+    - description: Prefix path for all backup artifacts stored in the Google Cloud Storage bucket
+      param: google_bucket_prefix
+
+  store-azure:
+    - ask: What is your Azure Account?
+      description: The Azure Account name is used to authenticate SHIELD to Azure Storage
+      vault: azure:account
+    - ask: What is your Azure Account Key?
+      description: The AWS Secret Key is used to authenticate SHIELD to Azure Storage
+      vault: azure:account_key
+    - ask: Azure Storage Container?
+      description: Azure Storage Container used by default to store all backup artifacts.
+      param: azure_storage_container
 
 certificates:
   base:

@@ -1,0 +1,17 @@
+---
+instance_groups:
+- name: shield
+  jobs:
+  - name: shield-agent
+    properties:
+      stores:
+        default:
+          plugin: s3
+          config:
+            s3_host: (( grab params.s3_host ))
+            s3_port: (( grab params.s3_port ))
+            skip_ssl_validation: (( grab params.s3_skip_ssl_validation ))
+            access_key_id: (( vault meta.vault "/s3-api:access_key" ))
+            secret_access_key: (( vault meta.vault "/s3-api:secret_key" ))
+            bucket: (( grab params.s3_bucket ))
+            prefix: (( grab params.s3_bucket_prefix ))
